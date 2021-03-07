@@ -135,6 +135,13 @@ API文档：https://sensible.metasv.com/#/address/get_address__address__tx
 
 **注意**：此接口MetaSV只提供最近一个月的交易（暂时不包括未确认交易），由蒋杰提供，接口路径和数据结构参考metasv接口
 
+### 获取全部Token列表
+
+使用场景：Token概况页面，翻页查看所有已知Token
+
+API接口：https://apiv2.metasv.com/sensible/genesis
+
+API文档：https://sensible.metasv.com/#/sensible/get_genesis
 
 ### 使用地址获取Sensible Utxo
 

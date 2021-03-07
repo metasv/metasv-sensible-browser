@@ -467,6 +467,30 @@ paths:
                 items:
                   $ref: '#/components/schemas/SensibleAddressTx'
 
+  '/sensible/genesis':
+    get:
+      tags:
+        - sensible
+      summary: Get all sensible tokens by paging(100 per page). Order by create time desc.
+      parameters:
+        - name: flag
+          in: query
+          description: The last id of the last query(Paging flag)
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Get sensible token list success.
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 100
+                items:
+                  $ref: '#/components/schemas/SensibleGenesis'
+
   '/sensible/genesis/{genesis}/utxo':
     get:
       tags:
@@ -834,6 +858,35 @@ components:
           type: integer
           format: int64
           description: The total amount you want to pick
+
+    SensibleGenesis:
+      type: object
+      description: Sensible token identification genesis transaction info.
+      properties:
+        flag:
+          type: integer
+          format: int64
+          description: paging flag
+        genesis:
+          type: string
+          description: Genesis id of sensible token
+        name:
+          type: string
+          description: Name of the token
+        desc:
+          type: string
+          description: description of the token
+        txid:
+          type: string
+          description: txid of the genesis transaction
+        height:
+          type: integer
+          description: Height of the utxo, -1 if not confirmed
+        createTime:
+          type: integer
+          format: int64
+          description: timestamp of the genesis tx
+
 
     SensibleUtxo:
       type: object
