@@ -322,6 +322,31 @@ paths:
                 items:
                   $ref: '#/components/schemas/OutputInfo'
 
+  '/vout/{txid}':
+    get:
+      tags:
+        - outpoint
+        - tx
+      summary: Get all output details with spent status by txid.
+      description: Search output points by txid. Return all outputs with spent status
+      parameters:
+        - name: txid
+          in: path
+          description: The txid of the outputs
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Get vout list success.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OutputInfo'
+
   '/merchant/broadcast':
     post:
       tags:
@@ -678,67 +703,9 @@ components:
           format: int64
           description: The total amount you want to pick
 
-
-    # todo support super address detail
-#    AddressDetail:
-#      type: object
-#      description: Current detail for typical address(register address required).
-#      properties:
-#        address:
-#          type: string
-#          description: current address
-#        confirmedBalance:
-#          type: integer
-#          format: int64
-#          description: total confirmed balance
-#        firstSpentTime:
-#          type: integer
-#          format: int64
-#          description: first spent timestamp
-#        firstSpentHeight:
-#          type: integer
-#          description: first spent height
-#        firstReceiveTime:
-#          type: integer
-#          format: int64
-#          description: first receive timestamp
-#        firstReceiveHeight:
-#          type: integer
-#          description: first receive height
-#        lastSpentTime:
-#          type: integer
-#          format: int64
-#          description: last spent timestamp
-#        lastSpentHeight:
-#          type: integer
-#          description: last spent height
-#        lastReceiveTime:
-#          type: integer
-#          format: int64
-#          description: last receive timestamp
-#        lastReceiveHeight:
-#          type: integer
-#          description: last receive height
-#        txCount:
-#          type: integer
-#          description: total tx count for this address
-#        totalIncome:
-#          type: integer
-#          format: int64
-#          description: total income value
-#        totalOutcome:
-#          type: integer
-#          format: int64
-#          description: total outcome value
-
-
   requestBodies:
     BigdataQueryRequest:
       content:
         application/json:
           schema:
             type: object
-
-
-
-
