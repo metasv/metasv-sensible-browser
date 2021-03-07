@@ -1,0 +1,744 @@
+openapi: 3.0.3
+info:
+  title: MetaSV API Spec
+  description: API definition for MetaSV provided apis
+  version: 2.0.0
+  license:
+    name: Open BSV License version 3
+    url: https://github.com/bitcoin-sv/bitcoin-sv/blob/master/LICENSE
+  contact:
+    email: heqiming@metasv.com
+    name: MetaSV team
+
+servers:
+  - url: 'https://apiv2.metasv.com'
+tags:
+  - name: block
+    description: block related apis
+  - name: tx
+    description: transaction related apis
+  - name: address
+    description: address related apis
+  - name: outpoint
+    description: output spent status (outpoint of vin) apis
+  - name: merchant
+    description: merchant apis
+
+paths:
+
+  /block/info:
+    get:
+      tags:
+        - block
+      summary: Get current blockchain info from full node.
+      responses:
+        '200':
+          description: Get blockchain info success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockchainInfo'
+
+  /block:
+    get:
+      tags:
+        - block
+      summary: Get recent block list by paging. 30 items per page.
+      parameters:
+        - in: query
+          name: last
+          required: false
+          description: paging flag, height of last item in last page
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successfully get lists
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 100
+                items:
+                  $ref: '#/components/schemas/BlockHeader'
+
+  '/block/{blockId}':
+    get:
+      tags:
+        - block
+      summary: Get block request by height or hash
+      parameters:
+        - name: blockId
+          in: path
+          description: The block id, height or hash acceptable.
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: get block info success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockHeader'
+        '404':
+          description: block info not found
+
+  '/block/{blockId}/txs':
+    get:
+      tags:
+        - block
+      summary: Get tx infos in the block by paging. 100 Items per page.
+      parameters:
+        - name: blockId
+          in: path
+          description: the request ID to search, block hash or height acceptable.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: flag
+          required: false
+          description: paging flag, blockIndex of last item returned last page.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get block tx list success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BlockTx'
+        '404':
+          description: block not found
+
+  '/tx/{txid}':
+      get:
+        tags:
+          - tx
+        summary: Get transaction detail by specific txid. Use '/vin/{txid}' to get detailed input info including address and value.
+        description: This api is parsed from raw hex, you can use /tx/{txid}/raw to parse tx by yourself, If you want detail input info, use '/vin/{txid}' to get detailed input info including address and value.
+        parameters:
+          - name: txid
+            in: path
+            description: the request ID to search, txhash
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Get transaction detail success.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/TxDetail'
+          '404':
+            description: Transaction not found
+
+  '/tx/{txid}/raw':
+    get:
+      tags:
+        - tx
+      summary: Get transaction raw hex by specific txid.
+      parameters:
+        - name: txid
+          in: path
+          description: the request ID to search, txhash
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get transaction raw hex success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TxRaw'
+        '404':
+          description: Transaction not found
+
+  '/tx/broadcast':
+    post:
+      tags:
+        - tx
+      summary: Broadcast tx to metasv fullnode.
+      description: This api will broadcast to metasv fullnode directly, If you want to use merchant api, see /merchant/boardcast.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TxRaw'
+      responses:
+        '201':
+          description: Broadcast success, txid returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BroadcastResult'
+        '403':
+          description: Broadcast Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BroadcastResult'
+
+  '/address/{address}/balance':
+    get:
+      tags:
+        - address
+      summary: Get address balance by specific address.
+      parameters:
+        - name: address
+          in: path
+          description: the requested address
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get address detail success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressBalance'
+
+  '/address/{address}/utxo':
+    get:
+      tags:
+        - address
+      summary: Get address utxos by specific address(100 per page).
+      parameters:
+        - name: address
+          in: path
+          description: the requested address
+          required: true
+          schema:
+            type: string
+        - name: flag
+          in: query
+          description: The last id of the last query(Paging flag)
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: confirmed
+          in: query
+          description: Whether the utxo is confirmed, true for confirmed utxo, false for unconfirmed utxo, null for all utxos.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get address utxos success.
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 100
+                items:
+                  $ref: '#/components/schemas/AddressUtxo'
+
+  '/address/{address}/tx':
+    get:
+      tags:
+        - address
+      summary: Get address history by specific address(Only recent 3 months available, Use super address apis if you need more history).
+      parameters:
+        - name: address
+          in: path
+          description: the requested address
+          required: true
+          schema:
+            type: string
+        - name: flag
+          in: query
+          description: The last flag of the last query record(Paging flag)
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get address transactions success.
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 30
+                items:
+                  $ref: '#/components/schemas/AddressTx'
+
+  '/outpoint/{txid}/{index}':
+    get:
+      tags:
+        - outpoint
+      summary: Get tx output(outpoint for vin) spent status.
+      description: Get detailed info for a utxo(or txo if spent), Only outputs spent no longer than one month are available. (Premium feature will support full history)
+      parameters:
+        - name: txid
+          in: path
+          description: The txid of the output
+          required: true
+          schema:
+            type: string
+        - name: index
+          in: path
+          description: The index of the output in the tx.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get outpoint success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutputInfo'
+
+  '/vin/{txid}':
+    get:
+      tags:
+        - outpoint
+        - tx
+      summary: Get all output point of vins in the tx(no longer than one month).
+      description: Search output points by spent txid. Use this api to get detailed inputs for the tx. (Premium feature will support full history)
+      parameters:
+        - name: txid
+          in: path
+          description: The txid of the vins
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Get vin list success.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OutputInfo'
+
+  '/merchant/broadcast':
+    post:
+      tags:
+        - merchant
+      summary: Broadcast tx to coorperated miner merchant APIs(TAAL).
+      description: This api will broadcast to taal, you can broadcast tx with fee rate 0.25 sat/b by this api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TxRaw'
+      responses:
+        '201':
+          description: Broadcast success, txid returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BroadcastResult'
+        '403':
+          description: Broadcast Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BroadcastResult'
+
+  '/merchant/utxo':
+    post:
+      tags:
+        - merchant
+      summary: Pick utxos by addresses and amount.
+      description: Selects a set of Utxos with total value higher than the given amount from a given address list . In case of HD wallets, multiple addresses can be specified.
+      parameters:
+        - name: confirmed
+          in: query
+          description: Whether the utxo is confirmed, "true" for confirmed, "false" for unconfirmed, null for both
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UtxoPickRequest'
+      responses:
+        '200':
+          description: utxo pick success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddressUtxo'
+
+components:
+  schemas:
+    BlockchainInfo:
+      type: object
+      properties:
+        chain:
+          type: string
+          description: mainnet or testnet
+        blocks:
+          type: integer
+          description: current block count
+        headers:
+          type: integer
+          description: current block header count
+        bestBlockHash:
+          type: string
+          description: current highest blockhash
+        difficulty:
+          type: string
+          description: decimal string for current difficulty
+        medianTime:
+          type: integer
+          format: int64
+          description: current median time
+        chainwork:
+          type: string
+          description: current pow
+    BlockHeader:
+      type: object
+      properties:
+        height:
+          type: integer
+          description: Block height.
+        blockHash:
+          type: string
+          description: Block hash.
+        version:
+          type: integer
+          description: Block version.
+        prevBlockHash:
+          type: string
+          description: The block hash of the previous block.
+        merkleRoot:
+          type: string
+          description: Hex formatted block merkle root.
+        timestamp:
+          type: integer
+          format: int64
+          description: Block timestamp.
+        medianTime:
+          type: integer
+          format: int64
+          description: Block median timestamp.
+        reward:
+          type: integer
+          format: int64
+          description: Miner total rewards, including miner fee.
+        miner:
+          type: string
+          description: Guessed miner name.
+        minerAddress:
+          type: string
+          description: Miner address that received rewards.
+        txCount:
+          type: integer
+          description: Total txs count included in the block.
+        inputCount:
+          type: integer
+          description: Total input count in the block.
+        outputCount:
+          type: integer
+          description: Total output count in the block
+        size:
+          type: integer
+          format: int64
+          description: Size of the block
+        bits:
+          type: integer
+          format: int64
+          description: Target bits.
+        nonce:
+          type: integer
+          format: int64
+          description: Block nonce
+        coinbase:
+          type: string
+          description: Hex formated coinbase info.
+
+    BlockTx:
+      type: object
+      description: Tx simple info for block tx list.
+      properties:
+        blockIndex:
+          type: integer
+          description: Index of the transaction in the block.
+        txid:
+          type: string
+          description: Transaction hash.
+        height:
+          type: integer
+          description: Block height of this tx.
+        size:
+          type: integer
+          format: int64
+          description: transaction size
+        inputCount:
+          type: integer
+          description: Input count in this transaction
+        outputCount:
+          type: integer
+          description: Output count in this transaction.
+        lockTime:
+          type: integer
+          format: int64
+          description: Lock time of this transaction
+        fee:
+          type: integer
+          format: int64
+          description: Trasaction fee.
+
+    TxDetail:
+      type: object
+      description: Parsed tx info
+      properties:
+        txDetail:
+          $ref: '#/components/schemas/BlockTx'
+        inputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/TxInput'
+        outputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/TxOutput'
+    TxInput:
+      type: object
+      description: Parsed inputs from raw tx. Use output api to get value and spent info.
+      properties:
+        index:
+          type: integer
+          description: Input index of the tx.
+        utxoTxid:
+          type: string
+          description: The outpoint utxo txid that this input spent
+        utxoIndex:
+          type: integer
+          description: The outpoint utxo index that this input spent
+#        address:
+#          type: string
+#          description: Parsed address from pubkey.
+        unlockScript:
+          type: string
+          description: The hex of the input script.
+    TxOutput:
+      type: object
+      description: Parsed outputs from raw tx.
+      properties:
+        index:
+          description: Output index of the tx.
+          type: integer
+        value:
+          description: Bitcoin Value in this output.
+          type: integer
+          format: int64
+        address:
+          description: Parsed address from output
+          type: string
+        lockScript:
+          description: Hex formatted lockScript
+          type: string
+    TxRaw:
+      type: object
+      description: Raw hex formatted Tx returned.
+      properties:
+        hex:
+          description: hex formatted raw tx.
+          type: string
+
+    BroadcastResult:
+      type: object
+      description: Broadcast result
+      properties:
+        txid:
+          description: return txid if broadcast success
+          type: string
+        message:
+          description: return messages if broadcast failed
+          type: string
+
+    AddressBalance:
+      type: object
+      description: The current balance for a particular address
+      properties:
+        address:
+          description: current address
+          type: string
+        confirmed:
+          description: confirmed balance
+          type: integer
+          format: int64
+        unconfirmed:
+          description: unconfirmed balance
+          type: integer
+          format: int64
+
+    AddressUtxo:
+      type: object
+      description: Utxos by address(or addresses) order by height asc.
+      properties:
+        flag:
+          type: integer
+          format: int64
+          description: paging flag
+        address:
+          type: string
+          description: Address of the utxo
+        txid:
+          type: string
+          description: txid of the utxo
+        outIndex:
+          type: integer
+          description: output index in the tx
+        value:
+          type: integer
+          format: int64
+          description: Value of the utxo
+        height:
+          type: integer
+          description: Height of the utxo, -1 if not confirmed
+
+    AddressTx:
+      type: object
+      description: Transaction history of the address.
+      properties:
+        flag:
+          type: string
+          description: Paging flag
+        address:
+          type: string
+          description: The address of the record
+        time:
+          type: integer
+          format: int64
+          description: timestamp of the tx
+        height:
+          type: integer
+          description: Block Height of the tx, -1 if not confirmed
+        income:
+          type: integer
+          format: int64
+          description: total income of the address from this tx
+        outcome:
+          type: integer
+          format: int64
+          description: total outcome of the address from this tx
+        txid:
+          type: string
+          description: txid of this record
+
+    OutputInfo:
+      description: spent status and value info of the output.
+      type: object
+      properties:
+        txid:
+          description: txid that this output is in.
+          type: string
+        index:
+          description: index of this output in the tx.
+          type: integer
+        address:
+          description: parsed address of this output, empty for non standard.
+          type: string
+        value:
+          description: value of this output
+          type: integer
+          format: int64
+        spent:
+          description: this output is spent or not, true if spent
+          type: boolean
+        spentTxid:
+          description: txid that spent this output
+          type: string
+        spentIndex:
+          description: vin index of the spent tx
+          type: integer
+        spentHeight:
+          description: height of the spent tx(-1 if unconfirmed, 0 if unspent)
+          type: integer
+
+    UtxoPickRequest:
+      description: Request object to batch pick utxo
+      type: object
+      properties:
+        addresses:
+          type: array
+          description: The address list to pick utxo from
+          items:
+            type: string
+        amount:
+          type: integer
+          format: int64
+          description: The total amount you want to pick
+
+
+    # todo support super address detail
+#    AddressDetail:
+#      type: object
+#      description: Current detail for typical address(register address required).
+#      properties:
+#        address:
+#          type: string
+#          description: current address
+#        confirmedBalance:
+#          type: integer
+#          format: int64
+#          description: total confirmed balance
+#        firstSpentTime:
+#          type: integer
+#          format: int64
+#          description: first spent timestamp
+#        firstSpentHeight:
+#          type: integer
+#          description: first spent height
+#        firstReceiveTime:
+#          type: integer
+#          format: int64
+#          description: first receive timestamp
+#        firstReceiveHeight:
+#          type: integer
+#          description: first receive height
+#        lastSpentTime:
+#          type: integer
+#          format: int64
+#          description: last spent timestamp
+#        lastSpentHeight:
+#          type: integer
+#          description: last spent height
+#        lastReceiveTime:
+#          type: integer
+#          format: int64
+#          description: last receive timestamp
+#        lastReceiveHeight:
+#          type: integer
+#          description: last receive height
+#        txCount:
+#          type: integer
+#          description: total tx count for this address
+#        totalIncome:
+#          type: integer
+#          format: int64
+#          description: total income value
+#        totalOutcome:
+#          type: integer
+#          format: int64
+#          description: total outcome value
+
+
+  requestBodies:
+    BigdataQueryRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+
+
+
+
