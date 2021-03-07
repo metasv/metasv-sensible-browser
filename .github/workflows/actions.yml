@@ -36,7 +36,7 @@ jobs:
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
-          AWS_S3_BUCKET: 'metasv-prod-swagger-origin'
+          AWS_S3_BUCKET: 'metasv-prod-sensible-origin'
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'ap-northeast-1'   # optional: defaults to us-east-1
@@ -46,7 +46,7 @@ jobs:
       - name: CloudFront Invalidation
         uses: chetan/invalidate-cloudfront-action@master
         env:
-          DISTRIBUTION: E198064ZV90D1Y
+          DISTRIBUTION: E3FGHBRDQCG23T
           PATHS: '/index.html'
           AWS_REGION: 'us-east-1'
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

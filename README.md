@@ -15,7 +15,7 @@
 
 这里只列出浏览器所需要的接口。
 
-接口统一使用openapi格式来进行定义，方便减少歧义以及生成sdk，可以在metasv的内测开发者平台上进行调试，https://developer.metasv.com/。内测平台只供友商使用，包含一些未发布的新特性，请勿公开。
+接口统一使用openapi格式来进行定义，方便减少歧义以及生成sdk，可以在metasv的内测开发者平台上进行调试，https://sensible.metasv.com/。内测平台只供友商使用，包含一些未发布的新特性，请勿公开。
 
 
 
@@ -25,7 +25,7 @@
 
 API接口：https://apiv2.metasv.com/block/info
 
-API文档：https://developer.metasv.com/#/block/get_block_info
+API文档：https://sensible.metasv.com/#/block/get_block_info
 
 
 
@@ -35,7 +35,7 @@ API文档：https://developer.metasv.com/#/block/get_block_info
 
 API接口：https://apiv2.metasv.com/block
 
-API文档：https://developer.metasv.com/#/block/get_block
+API文档：https://sensible.metasv.com/#/block/get_block
 
 
 
@@ -45,7 +45,7 @@ API文档：https://developer.metasv.com/#/block/get_block
 
 API接口：https://apiv2.metasv.com/block/677344
 
-API文档：https://developer.metasv.com/#/block/get_block__blockId_
+API文档：https://sensible.metasv.com/#/block/get_block__blockId_
 
 
 
@@ -55,7 +55,7 @@ API文档：https://developer.metasv.com/#/block/get_block__blockId_
 
 API接口：https://apiv2.metasv.com/block/677344/txs
 
-API文档：https://developer.metasv.com/#/block/get_block__blockId__txs
+API文档：https://sensible.metasv.com/#/block/get_block__blockId__txs
 
 
 
@@ -65,7 +65,7 @@ API文档：https://developer.metasv.com/#/block/get_block__blockId__txs
 
 API接口：https://apiv2.metasv.com/tx/66741aaecb851746a767c8fb51f89b42b7e048ca2631212d7a46883b31108223
 
-API文档：[https://developer.metasv.com/#/tx/get_tx__txid_](https://developer.metasv.com/#/tx/get_tx__txid_)
+API文档：[https://sensible.metasv.com/#/tx/get_tx__txid_](https://sensible.metasv.com/#/tx/get_tx__txid_)
 
 **注意**：这里解析出来的input和output是直接从生交易中解析出来的，input中不包含address和value，output不包含花费状态，浏览器可以无视
 
@@ -77,7 +77,7 @@ API文档：[https://developer.metasv.com/#/tx/get_tx__txid_](https://developer.
 
 API接口：https://apiv2.metasv.com/tx/66741aaecb851746a767c8fb51f89b42b7e048ca2631212d7a46883b31108223/raw
 
-API文档：https://developer.metasv.com/#/tx/get_tx__txid__raw
+API文档：https://sensible.metasv.com/#/tx/get_tx__txid__raw
 
 
 
@@ -87,7 +87,7 @@ API文档：https://developer.metasv.com/#/tx/get_tx__txid__raw
 
 API接口：https://apiv2.metasv.com/vin/66741aaecb851746a767c8fb51f89b42b7e048ca2631212d7a46883b31108223
 
-API文档：[https://developer.metasv.com/#/tx/get_vin__txid_](https://developer.metasv.com/#/tx/get_vin__txid_)
+API文档：[https://sensible.metasv.com/#/tx/get_vin__txid_](https://sensible.metasv.com/#/tx/get_vin__txid_)
 
 **注意**：此接口MetaSV提供最近一个月的交易（不包括未确认交易），因此由蒋杰提供，接口路径和数据结构参考metasv接口。
 
@@ -99,7 +99,7 @@ API文档：[https://developer.metasv.com/#/tx/get_vin__txid_](https://developer
 
 API接口：https://apiv2.metasv.com/vout/66741aaecb851746a767c8fb51f89b42b7e048ca2631212d7a46883b31108223
 
-API文档：[https://developer.metasv.com/#/tx/get_vout__txid_](https://developer.metasv.com/#/tx/get_vout__txid_)
+API文档：[https://sensible.metasv.com/#/tx/get_vout__txid_](https://sensible.metasv.com/#/tx/get_vout__txid_)
 
 **注意**：此接口MetaSV提供最近一个月的交易（不包括未确认交易），因此由蒋杰提供，接口路径和数据结构参考metasv接口。
 
@@ -111,7 +111,7 @@ API文档：[https://developer.metasv.com/#/tx/get_vout__txid_](https://develope
 
 API接口：https://apiv2.metasv.com/address/1JshWqkXRfq5DDYWqrQfm8Fun4rLmdqB1t/balance
 
-API文档：https://developer.metasv.com/#/address/get_address__address__balance
+API文档：https://sensible.metasv.com/#/address/get_address__address__balance
 
 
 
@@ -121,7 +121,7 @@ API文档：https://developer.metasv.com/#/address/get_address__address__balance
 
 API接口：https://apiv2.metasv.com/address/1JshWqkXRfq5DDYWqrQfm8Fun4rLmdqB1t/utxo
 
-API文档：https://developer.metasv.com/#/address/get_address__address__utxo
+API文档：https://sensible.metasv.com/#/address/get_address__address__utxo
 
 
 
@@ -131,7 +131,7 @@ API文档：https://developer.metasv.com/#/address/get_address__address__utxo
 
 API接口：https://apiv2.metasv.com/address/1JshWqkXRfq5DDYWqrQfm8Fun4rLmdqB1t/tx
 
-API文档：https://developer.metasv.com/#/address/get_address__address__tx
+API文档：https://sensible.metasv.com/#/address/get_address__address__tx
 
 **注意**：此接口MetaSV只提供最近一个月的交易（暂时不包括未确认交易），由蒋杰提供，接口路径和数据结构参考metasv接口
 
