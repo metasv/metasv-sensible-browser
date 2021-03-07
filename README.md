@@ -136,6 +136,22 @@ API文档：https://sensible.metasv.com/#/address/get_address__address__tx
 **注意**：此接口MetaSV只提供最近一个月的交易（暂时不包括未确认交易），由蒋杰提供，接口路径和数据结构参考metasv接口
 
 
+### 使用地址获取Sensible Utxo
+使用场景：地址详情页，显示该地址所属的所有sensible token
+API接口：https://apiv2.metasv.com/sensible/address/1JshWqkXRfq5DDYWqrQfm8Fun4rLmdqB1t/utxo
+API文档：https://sensible.metasv.com/#/address/get_address__address__tx
 
+### 使用genesis id取Sensible Utxo
+使用场景：Genesis详情页，显示该Genesis所属的所有sensible token
+API接口：https://apiv2.metasv.com/sensible/genesis/1JshWqkXRfq5DDYWqrQfm8Fun4rLmdqB1t/utxo
+API文档：https://sensible.metasv.com/#/address/get_address__address__tx
 
+### 使用地址获取Sensible tx
+使用场景：地址详情页，显示该地址所属的所有sensible token
+API接口：https://apiv2.metasv.com/sensible/address/1JshWqkXRfq5DDYWqrQfm8Fun4rLmdqB1t/tx
+API文档：https://sensible.metasv.com/#/address/get_address__address__tx
 
+### 使用genesis id取Sensible tx
+使用场景：Genesis详情页，显示该Genesis所属的所有sensible token
+API接口：https://apiv2.metasv.com/sensible/genesis/1JshWqkXRfq5DDYWqrQfm8Fun4rLmdqB1t/tx
+API文档：https://sensible.metasv.com/#/address/get_address__address__tx
