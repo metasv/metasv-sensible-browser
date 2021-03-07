@@ -97,7 +97,7 @@ API文档：[https://developer.metasv.com/#/tx/get_vin__txid_](https://developer
 
 使用场景：交易详情页面，根据txid查询该交易所有output的详情，此接口携带output的花费状态
 
-API接口：https://apiv2.metasv.com/vin/66741aaecb851746a767c8fb51f89b42b7e048ca2631212d7a46883b31108223
+API接口：https://apiv2.metasv.com/vout/66741aaecb851746a767c8fb51f89b42b7e048ca2631212d7a46883b31108223
 
 API文档：[https://developer.metasv.com/#/tx/get_vout__txid_](https://developer.metasv.com/#/tx/get_vout__txid_)
 
