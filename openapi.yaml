@@ -402,6 +402,136 @@ paths:
                 items:
                   $ref: '#/components/schemas/AddressUtxo'
 
+  '/sensible/address/{address}/utxo':
+    get:
+      tags:
+        - sensible
+      summary: Get address sensible token utxos by specific address(100 per page).
+      parameters:
+        - name: address
+          in: path
+          description: the requested address
+          required: true
+          schema:
+            type: string
+        - name: flag
+          in: query
+          description: The last id of the last query(Paging flag)
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: confirmed
+          in: query
+          description: Whether the utxo is confirmed, true for confirmed utxo, false for unconfirmed utxo, null for all utxos.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get address utxos success.
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 100
+                items:
+                  $ref: '#/components/schemas/SensibleOutput'
+
+  '/sensible/address/{address}/tx':
+    get:
+      tags:
+        - sensible
+      summary: Get address history of sensible tokens by specific address.
+      parameters:
+        - name: address
+          in: path
+          description: the requested address
+          required: true
+          schema:
+            type: string
+        - name: flag
+          in: query
+          description: The last flag of the last query record(Paging flag)
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get address transactions success.
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 30
+                items:
+                  $ref: '#/components/schemas/SensibleAddressTx'
+
+  '/sensible/genesis/{genesis}/utxo':
+    get:
+      tags:
+        - sensible
+      summary: Get sensible token utxos by specific genesis(100 per page).
+      parameters:
+        - name: genesis
+          in: path
+          description: the requested genesis
+          required: true
+          schema:
+            type: string
+        - name: flag
+          in: query
+          description: The last id of the last query(Paging flag)
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: confirmed
+          in: query
+          description: Whether the utxo is confirmed, true for confirmed utxo, false for unconfirmed utxo, null for all utxos.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get sensible utxos by genesis success.
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 100
+                items:
+                  $ref: '#/components/schemas/SensibleOutput'
+
+  '/sensible/genesis/{genesis}/tx':
+    get:
+      tags:
+        - sensible
+      summary: Get tx history of sensible tokens by specific genesis.
+      parameters:
+        - name: genesis
+          in: path
+          description: the requested genesis
+          required: true
+          schema:
+            type: string
+        - name: flag
+          in: query
+          description: The last flag of the last query record(Paging flag)
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get genesis transactions success.
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 30
+                items:
+                  $ref: '#/components/schemas/SensibleGenesisTx'
+
 components:
   schemas:
     BlockchainInfo:
@@ -704,6 +834,80 @@ components:
           type: integer
           format: int64
           description: The total amount you want to pick
+
+    SensibleUtxo:
+      type: object
+      description: Sensible protocol related outputs with spent info.
+      properties:
+        flag:
+          type: integer
+          format: int64
+          description: paging flag
+        genesis:
+          type: string
+          description: Genesis id of sensible token
+        address:
+          type: string
+          description: Address of the utxo
+        txid:
+          type: string
+          description: txid of the utxo
+        outIndex:
+          type: integer
+          description: output index in the tx
+        value:
+          type: integer
+          format: int64
+          description: Value of the utxo
+        tokenValue:
+          type: integer
+          format: int64
+          description: Value of the tokens contained in the utxo
+        height:
+          type: integer
+          description: Height of the utxo, -1 if not confirmed
+
+    SensibleAddressTx:
+      type: object
+      description: Sensible Transaction history by address(address->token transactions)
+      properties:
+        flag:
+          type: string
+          description: Paging flag
+        address:
+          type: string
+          description: The address of the record
+        time:
+          type: integer
+          format: int64
+          description: timestamp of the tx
+        height:
+          type: integer
+          description: Block Height of the tx, -1 if not confirmed
+        txid:
+          type: string
+          description: txid of this record
+
+    SensibleGenesisTx:
+      type: object
+      description: Sensible Transaction history by genesis(genesis->token transactions)
+      properties:
+        flag:
+          type: string
+          description: Paging flag
+        genesis:
+          type: string
+          description: The genesis of the record
+        time:
+          type: integer
+          format: int64
+          description: timestamp of the tx
+        height:
+          type: integer
+          description: Block Height of the tx, -1 if not confirmed
+        txid:
+          type: string
+          description: txid of this record
 
   requestBodies:
     BigdataQueryRequest:
