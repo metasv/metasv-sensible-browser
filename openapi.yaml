@@ -436,7 +436,7 @@ paths:
                 type: array
                 maxItems: 100
                 items:
-                  $ref: '#/components/schemas/SensibleOutput'
+                  $ref: '#/components/schemas/SensibleUtxo'
 
   '/sensible/address/{address}/tx':
     get:
@@ -501,7 +501,7 @@ paths:
                 type: array
                 maxItems: 100
                 items:
-                  $ref: '#/components/schemas/SensibleOutput'
+                  $ref: '#/components/schemas/SensibleUtxo'
 
   '/sensible/genesis/{genesis}/tx':
     get:
