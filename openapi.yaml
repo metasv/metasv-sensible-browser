@@ -23,6 +23,8 @@ tags:
     description: output spent status (outpoint of vin) apis
   - name: merchant
     description: merchant apis
+  - name: sensible
+    description: sensible token related apis
 
 paths:
 
