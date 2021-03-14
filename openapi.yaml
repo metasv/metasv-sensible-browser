@@ -414,7 +414,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: genesisId
+        - name: genesis
           in: query
           description: Filter utxo by specific genesisId
           required: false
