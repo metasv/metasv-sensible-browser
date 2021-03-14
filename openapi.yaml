@@ -414,6 +414,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: genesisId
+          in: query
+          description: Filter utxo by specific genesisId
+          required: false
+          schema:
+            type: string
         - name: flag
           in: query
           description: The last id of the last query(Paging flag)
